@@ -1,0 +1,26 @@
+{
+    "messages": {
+        "InterviewCard.cardText": "Unlock your potential and embark on a fulfilling professional journey with Intelligent Interview Prep",
+        "InterviewCard.requestButton": "Sign up for a mock interview",
+        "JobInfo.hi": "Hi, {name}! Let's help you prepare for your job search",
+        "JobInfo.companyMessage": "First type the name of the company you want to apply to",
+        "JobInfo.information": "Welcome to the your Practice Interview. Please enter a company name and a position. We will use this information to generate mock interview questions.",
+        "JobInfo.submitButton": "Submit",
+        "Interview.step0Label": "Know more about the company",
+        "Interview.step1Label": "Interview tips",
+        "Interview.step2Label": "Mock interview",
+        "Interview.backButton": "Back",
+        "Interview.continueButton": "Continue",
+        "Interview.aboutCompany": "About {company}",
+        "Interview.interviewNotes": "Interview notes for your desired role",
+        "Interview.firstQuestion": "Here is your first question: \n\n**{question}**",
+        "Interview.nextQuestion": "Okay, here is the second question: \n\n**{question}**",
+        "Interview.submitButton": "Submit",
+        "Interview.yesAnotherQuestionChip": "Yes, I would like a question",
+        "Interview.noMoreQuestionsChip": "No, I am done for now",
+        "Interview.yesAdvisor": "Yes, I would like to get coaching from my advisor",
+        "Interview.noAdvisor": "no, I am good for now",
+        "Interview.tipsTopic": "Topic",
+        "Interview.tipsExample": "Example Response"
+    }
+}

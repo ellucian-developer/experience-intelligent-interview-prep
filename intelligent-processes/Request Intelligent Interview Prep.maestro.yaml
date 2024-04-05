@@ -1,0 +1,127 @@
+name: zRequest Intelligent Interview Prep
+description: ''
+maestroYamlVersion: 1.0.0
+type: api
+segments:
+  start-api_3792ddcf-e818-43f7-bcc8-34baa82b0711:
+    class: start-api
+    classDisplayName: Start
+    name: Start
+    config:
+      expirationDate: P120D
+      input: []
+    out:
+      - external-task_28279032-e7d3-4950-87e6-c32c7d1b7f1a
+  external-task_28279032-e7d3-4950-87e6-c32c7d1b7f1a:
+    class: external-task
+    classDisplayName: External Task
+    name: Intelligent Interview Prep
+    config:
+      code: INTELLIGENTINTERVIEWPREP
+      version: 1.0.0
+      isBaseline: false
+      inputs: []
+      assigneeType: data
+      assignee: __requestedFor
+      dueDate: P14D
+      sendExperienceNotification: true
+      expNotificationMessage:
+        assignment: A task for {workflowName} has been assigned to you.
+        dueDate: A task for {workflowName} is due for you.
+      expNotificationIcon:
+        assignment: requirements
+        dueDate: requirements
+    in:
+      - start-api_3792ddcf-e818-43f7-bcc8-34baa82b0711
+    out:
+      - split-task_adf3b233-36a7-4ca9-8c4a-3b9129bc4334
+  end_4b738804-c418-4baa-89ac-573c598e2048:
+    class: end
+    classDisplayName: End
+    name: End
+    config: {}
+    in:
+      - split-task_adf3b233-36a7-4ca9-8c4a-3b9129bc4334
+  action_96b96b19-a6c9-430f-ba85-82be4738500a:
+    class: action
+    classDisplayName: Action
+    name: Get Students Advisor
+    config:
+      code: GETSTUDENTSADVISOR
+      version: 1.0.0
+      isBaseline: false
+      parameters:
+        - inputParameterName: studentId
+          mapType: processVariable
+          processVariableName: __requestedFor
+      inputs: []
+    in:
+      - split-task_adf3b233-36a7-4ca9-8c4a-3b9129bc4334
+    out:
+      - approval-task_eebf5cab-a907-4688-bd8a-8531591947ed
+  approval-task_eebf5cab-a907-4688-bd8a-8531591947ed:
+    class: approval-task
+    classDisplayName: Approval Task
+    name: Provide Interview Coaching
+    config:
+      approvalView:
+        approvalDetails: ''
+        approvalSelectedData:
+          - name: __requestedFor
+            displayName: Started For
+            type: Person
+          - name: __external_task_28279032_e7d3_4950_87e6_c32c7d1b7f1a_outcome
+            displayName: Intelligent Interview Prep Outcome
+            type: String
+          - name: __external_task_28279032_e7d3_4950_87e6_c32c7d1b7f1a_evaluation
+            displayName: Evaluation
+            type: string
+          - name: __action_96b96b19_a6c9_430f_ba85_82be4738500a_advisorId
+            displayName: Advisor Id
+            type: person
+          - name: __action_96b96b19_a6c9_430f_ba85_82be4738500a_studentFullName
+            displayName: Student Full Name
+            type: string
+          - name: __approval_task_eebf5cab_a907_4688_bd8a_8531591947ed_comment
+            displayName: Provide Interview Coaching Comment
+        isCommentEnabled: true
+      userTaskActions:
+        - label: Student was coached
+          value: student was coached
+        - label: Student was NOT coached
+          value: student was not coached
+      assigneeType: data
+      assignee: __action_96b96b19_a6c9_430f_ba85_82be4738500a_advisorId
+      dueDate: P14D
+      sendExperienceNotification: true
+      expNotificationMessage:
+        assignment: A task for {workflowName} has been assigned to you.
+        dueDate: A task for {workflowName} is due for you.
+      expNotificationIcon:
+        assignment: requirements
+        dueDate: requirements
+    in:
+      - action_96b96b19-a6c9-430f-ba85-82be4738500a
+    out:
+      - end_7e93904b-4801-4fe6-81fb-aa3099a0a80e
+  end_7e93904b-4801-4fe6-81fb-aa3099a0a80e:
+    class: end
+    classDisplayName: End
+    name: End
+    config: {}
+    in:
+      - approval-task_eebf5cab-a907-4688-bd8a-8531591947ed
+  split-task_adf3b233-36a7-4ca9-8c4a-3b9129bc4334:
+    class: split-task
+    classDisplayName: Split
+    name: Coaching or No Coaching
+    config: {}
+    in:
+      - external-task_28279032-e7d3-4950-87e6-c32c7d1b7f1a
+    out:
+      - node: end_4b738804-c418-4baa-89ac-573c598e2048
+        condition: default
+      - node: action_96b96b19-a6c9-430f-ba85-82be4738500a
+        condition: >-
+          __external_task_28279032_e7d3_4950_87e6_c32c7d1b7f1a_outcome ==
+          'completed_coaching'

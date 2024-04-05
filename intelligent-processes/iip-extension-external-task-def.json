@@ -1,0 +1,20 @@
+{
+  "input": [],
+  "output": [
+    {
+      "name": "evaluation",
+      "type": "string",
+      "nullable": false
+    }
+  ],
+  "outcomes": [
+    {
+      "label": "Completed",
+      "value": "completed"
+    },
+    {
+      "label": "Completed - Request Coaching",
+      "value": "completed_coaching"
+    }
+  ]
+}

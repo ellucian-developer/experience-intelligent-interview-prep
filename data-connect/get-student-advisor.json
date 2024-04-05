@@ -1,0 +1,85 @@
+{
+  "name": "dctstaging-guidelight-get-student-advisor",
+  "parameters": [
+    {
+      "name": "studentId",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "apiDefinition": {
+    "authType": "ethosToken",
+    "httpVerb": "GET",
+    "outputSchema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+        "advisorId": {
+          "type": "string",
+          "title": "advisorId"
+        },
+        "studentFullName": {
+          "type": "string",
+          "title": "studentFullName"
+        }
+      },
+      "required": [
+        "advisorId",
+        "studentFullName"
+      ]
+    }
+  },
+  "pipeline": [
+    "Get student advisors",
+    "extract-primary-advisor",
+    "Get Student Persons Record",
+    "extract student names"
+  ],
+  "segments": {
+    "Get student advisors": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "resource": "student-advisor-relationships",
+        "filter": "?criteria={\"student\":{\"id\":\"{{{context.studentId}}}\"}}",
+        "payloadTargetPath": "advisors",
+        "acceptVersions": [
+          "10"
+        ],
+        "cache": false,
+        "queryByPost": false,
+        "ignoreErrors": false
+      }
+    },
+    "extract-primary-advisor": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { payload: { advisors } = {} } = message;\n  \n  let advisorId;\n  for (const advisor of advisors) {\n    if (advisor.assignedPriority === 'primary') {\n      advisorId = advisor.advisor.id;\n    }\n  }\n  \n  context.set('advisorId', advisorId);\n  \n  return {\n    payload: { }\n  };\n}\n"
+      }
+    },
+    "Get Student Persons Record": {
+      "class": "ethosProxyGet",
+      "config": {
+        "resource": "persons",
+        "acceptVersions": [
+          "12"
+        ],
+        "idFromContext": "studentId",
+        "target": "student",
+        "cache": false,
+        "ignoreErrors": false
+      }
+    },
+    "extract student names": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { payload: { student: { names = [] } = {} } = {} } = message;\n\n  const result = {\n      advisorId: context.advisorId,\n  }\n\n  const preferredName = names.find(name => name.preference === 'preferred');\n\n  if (preferredName) {\n    result.studentFullName = preferredName.fullName;\n  }\n\n  return {\n    payload: result\n  };\n}"
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "dct5staging-guidelight-post-iip-results",
+  "parameters": [
+    {
+      "name": "ethosApiKey",
+      "type": "string",
+      "required": true,
+      "sensitive": true
+    }
+  ],
+  "apiDefinition": {
+    "authType": "userToken",
+    "httpVerb": "POST"
+  },
+  "pipeline": [
+    "setup",
+    "Ethos Proxy Post"
+  ],
+  "segments": {
+    "setup": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { payload: { company, position, rating } = {} } = message;\n  const { __user: contextUser, testPersonId } = context;\n  const personId = testPersonId || contextUser?.id;\n  \n  // build the POST body\n  const body = {\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\n    \"xsipresStudentId\": personId,\n    \"xsipresCompany\": company,\n    \"xsipresPosition\": position,\n    \"xsipresRating\": rating,\n    \"xsipresDate\": new Date().toISOString(),\n  }\n\n  return {\n    payload: body\n  };\n}"
+      }
+    },
+    "Ethos Proxy Post": {
+      "class": "ethosProxyPost",
+      "config": {
+        "resource": "x-iip-results",
+        "contentVersion": "1",
+        "acceptVersion": "1",
+        "ignoreErrors": false
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "input": [],
+  "output": [
+    {
+      "name": "advisorId",
+      "type": "person",
+      "nullable": true
+    },
+    {
+      "name": "studentFullName",
+      "type": "string",
+      "nullable": true
+    }
+  ],
+  "queryParameters": [
+    {
+      "name": "studentId",
+      "type": "person",
+      "isRequired": true
+    }
+  ]
+}

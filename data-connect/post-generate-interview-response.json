@@ -1,0 +1,62 @@
+{
+  "name": "dct5staging-post-generate-interview-response",
+  "description": "Generate a list of questions for mock interviews using OpenAI",
+  "parameters": [
+    {
+      "name": "openAiApiKey",
+      "type": "string",
+      "required": true,
+      "sensitive": true
+    }
+  ],
+  "apiDefinition": {
+    "authType": "userToken",
+    "httpVerb": "POST"
+  },
+  "pipeline": [
+    "Setup",
+    "Chat Completions",
+    "extract-message-response"
+  ],
+  "segments": {
+    "Setup": {
+      "class": "JavaScriptTransform",
+      "description": "Sets up the basic information to send through the pipeline",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const {\n    payload: {\n      company,\n      position,\n      program,\n      messages = [],\n      type = 'initial' } = {}\n  }  = message;\n\n  const systemPrompts = {\n    initial: `The user is a student who is graduating soon and needs to practice for their upcoming job interview. Generate interview questions one at a time based on the academic program: ${program}, the company: ${company}, and the job title: ${position}. Make sure the questions are each covering a diverse set of topics, skills, and job criteria. Assume the student is not familiar with the details of the company's products. Assume the student does not have prior professional experience. Each question should be formatted in a JSON response with an attribute name: question.`,\n    nextQuestion: 'Please generate the next question.',\n    evaluateAnswer: 'Please evaluate the answer. The response will include a rating from 1 to 5 returned as an attribute named: rating. The response will include feedback formatted as a markdown highlighting key works. The feedback will be in an attribute named: feedback.',\n    evaluateInterview: \"Please evalute the user's responses to all the questions. The evaluation response will include a rating from 1 to 5 returned as an attribute named: rating. The response will include overall feedback formatted as a markdown highlighting key works. The feedback will be in an attribute named: feedback.\",\n  }\n\n  let messageHistory = messages, promptMessages = [];\n\n  // rebuild the prompt messages from the history\n  for (const aMessage of messages) {\n    promptMessages.push({\n      role: aMessage.role,\n      content: aMessage.role === 'system' ? systemPrompts[aMessage.id] : aMessage.content,\n    });\n  }\n\n  function systemMessage(id) {\n    return {\n      role: 'system',\n      content: systemPrompts[id],\n    }\n  }\n\n  function systemMessageForHistory(id) {\n    return {\n      role: 'system',\n      id,\n    }\n  }\n\n  switch(type) {\n    case 'initial':\n      promptMessages = [ systemMessage('initial') ];\n      messageHistory = [ systemMessageForHistory('initial') ];\n      break;\n    case 'next-question':\n      promptMessages.push(systemMessage('nextQuestion'));\n      messageHistory.push(systemMessageForHistory('nextQuestion'));\n      break;\n    case 'evaluate-answer':\n      if (message.length === 0) {\n        throw new Error('missing the \"user\" content to evaluate an answer');\n      }\n      promptMessages.push(systemMessage('evaluateAnswer'));\n      messageHistory.push(systemMessageForHistory('evaluateAnswer'));\n      break;\n    case 'evaluate-interview':\n      promptMessages.push(systemMessage('evaluateInterview'));\n      messageHistory.push(systemMessageForHistory('evaluateInterview'));\n      break;\n    default:\n      throw new Error(`unknown responseType: ${type}`);\n  }\n\n  context.set('messages', promptMessages);\n  context.set('messageHistory', messageHistory);\n\n  return {\n    payload: {\n    }\n  };\n}\n"
+      }
+    },
+    "Chat Completions": {
+      "class": "openaiChatCompletions",
+      "config": {
+        "messages": "context.messages",
+        "model": "gpt-4-1106-preview",
+        "ignoreErrors": false,
+        "openaiApiKey": "openAiApiKey",
+        "advanced": {
+          "temperature": 1,
+          "topP": 1,
+          "frequencyPenalty": 0,
+          "presencePenalty": 0,
+          "maxTokens": "2000",
+          "n": 1,
+          "responseFormat": {
+            "type": "json_object"
+          }
+        }
+      }
+    },
+    "extract-message-response": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { payload } = message;\n  const { messageHistory } = context;\n\n  const { body: { choices: [ { finish_reason: finishReason, message: responseMessage } = {} ] = [{}] } = {} } = payload;\n  messageHistory.push(responseMessage);\n\n  return {\n    payload: {\n      message: {\n        ...responseMessage,\n        finishReason,\n      },\n      messageHistory,\n    }\n  };\n}\n"
+      }
+    }
+  }
+}

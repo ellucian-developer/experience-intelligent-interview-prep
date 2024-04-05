@@ -1,0 +1,78 @@
+{
+  "name": "dct5staging-guidelight-get-program",
+  "parameters": [
+    {
+      "name": "ethosApiKey",
+      "type": "string",
+      "required": true,
+      "sensitive": true
+    }
+  ],
+  "apiDefinition": {
+    "authType": "userToken",
+    "httpVerb": "GET"
+  },
+  "pipeline": [
+    "setup",
+    "Get student's academic program",
+    "extract-discipline-id",
+    "Get academic discipline",
+    "JavaScript Transform"
+  ],
+  "segments": {
+    "setup": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { __user: contextUser, testPersonId } = context;\n  const personId = testPersonId || contextUser?.id;\n  context.set('personId', personId);\n  \n  return message;\n}"
+      }
+    },
+    "Get student's academic program": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "resource": "student-academic-programs",
+        "filter": "?criteria={\"student\": {\"id\": \"{{{context.personId}}}\"},\"curriculumObjective\": \"matriculated\"}",
+        "payloadTargetPath": "academicPrograms",
+        "acceptVersions": [
+          "17"
+        ],
+        "cache": false,
+        "queryByPost": false,
+        "ignoreErrors": false
+      }
+    },
+    "extract-discipline-id": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { payload: { academicPrograms: [ { id: studentAcademicProgramId, disciplines: [ { discipline: { id: disciplineId } = {}} = {}] = [ {}]} = {}] = [ {} ]} = {}} = message;\n  context.set('studentAcademicProgramId', studentAcademicProgramId);\n  context.set('disciplineId', disciplineId);\n\n  return message;\n}"
+      }
+    },
+    "Get academic discipline": {
+      "class": "ethosProxyGet",
+      "config": {
+        "resource": "academic-disciplines",
+        "acceptVersions": [
+          "15"
+        ],
+        "idFromContext": "disciplineId",
+        "target": "discipline",
+        "cache": false,
+        "ignoreErrors": false
+      }
+    },
+    "JavaScript Transform": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  const { payload: { discipline: { title: program } = {}} = {}} = message;\n\n  return {\n    payload: {\n      studentAcademicProgramId: context.studentAcademicProgramId,\n      disciplineId: context.disciplineId,\n      program\n    }\n  }\n}\n"
+      }
+    }
+  }
+}

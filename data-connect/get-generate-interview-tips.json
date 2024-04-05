@@ -1,0 +1,77 @@
+{
+  "name": "dct5staging-get-generate-interview-tips",
+  "description": "Generate a list of questions for mock interviews using OpenAI",
+  "parameters": [
+    {
+      "name": "openAiApiKey",
+      "type": "string",
+      "required": true,
+      "sensitive": true
+    },
+    {
+      "name": "company",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "position",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "program",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "apiDefinition": {
+    "authType": "userToken",
+    "httpVerb": "GET"
+  },
+  "pipeline": [
+    "Chat Completions",
+    "extract-message-response"
+  ],
+  "segments": {
+    "Chat Completions": {
+      "class": "openaiChatCompletions",
+      "config": {
+        "messages": [
+          {
+            "role": "system",
+            "name": "",
+            "content": "The user is interviewing for a position at a company. They want to see how a degree in their chosen degree/program will help them prepare for an interview. Please generate a JSON array of objects named \"tips\", where each object has 2 attributes: “topic”: A markdown-formatted string which starts in bold naming a topic that the interviewer may cover then lists some bullet points of things that interviewers may be looking for from entry level candidates and why it is important for this job “example”: A markdown formatted string which gives an example answer for questions on this topic. Include placeholders like “**<insert X>**” to indicate how the student can personalize the answer. Reply only with JSON and no other text before or after."
+          },
+          {
+            "role": "user",
+            "name": "",
+            "content": "My academic program is: {{context.program}}. The company is: {{context.company}}. The position is: {{context.position}}"
+          }
+        ],
+        "model": "gpt-4-1106-preview",
+        "ignoreErrors": false,
+        "openaiApiKey": "openAiApiKey",
+        "advanced": {
+          "n": 1,
+          "topP": 1,
+          "maxTokens": "2000",
+          "temperature": 1,
+          "responseFormat": {
+            "type": "json_object"
+          },
+          "presencePenalty": 0,
+          "frequencyPenalty": 0
+        }
+      }
+    },
+    "extract-message-response": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform(message, context) {\n  const {\n    payload: {\n      body: {\n        choices: [\n          { finish_reason: finishReason, message: responseMessage } = {}\n        ] = [{}]\n      } = {}\n    } = {}\n  } = message;\n\n  return {\n    payload: {\n      message: {\n        ...responseMessage,\n        finishReason,\n      }\n    }\n  };\n}\n"
+      }
+    }
+  }
+}

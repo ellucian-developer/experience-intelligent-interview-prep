@@ -1,0 +1,67 @@
+{
+  "name": "dct5staging-get-generate-company-info",
+  "description": "Generate a list of questions for mock interviews using OpenAI",
+  "parameters": [
+    {
+      "name": "openAiApiKey",
+      "type": "string",
+      "required": true,
+      "sensitive": true
+    },
+    {
+      "name": "company",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "apiDefinition": {
+    "authType": "userToken",
+    "httpVerb": "GET"
+  },
+  "pipeline": [
+    "Chat Completions",
+    "extract-message-response"
+  ],
+  "segments": {
+    "Chat Completions": {
+      "class": "openaiChatCompletions",
+      "config": {
+        "messages": [
+          {
+            "role": "system",
+            "name": "",
+            "content": "The user is a student graduating soon and needs to practice for their upcoming job interview. Assume the student is not familiar with the details of the company's products and services.  Assume this is an entry-level position that requires no prior experience. Generate a single-sentence description of the company and then also generate bullet points of important company details and what products and services it provides. Please generate a JSON response with a single attribute named \"companyInfo\". The companyInfo attribute value will be the response formatted using Markdown to emphasize keywords and phrases. Reply only with JSON and no other text before or after."
+          },
+          {
+            "role": "user",
+            "name": "",
+            "content": "The company is: {{context.company}}"
+          }
+        ],
+        "model": "gpt-4-1106-preview",
+        "ignoreErrors": false,
+        "openaiApiKey": "openAiApiKey",
+        "advanced": {
+          "n": 1,
+          "topP": 1,
+          "maxTokens": "2000",
+          "temperature": 1,
+          "responseFormat": {
+            "type": "json_object"
+          },
+          "presencePenalty": 0,
+          "frequencyPenalty": 0
+        }
+      }
+    },
+    "extract-message-response": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform(message, context) {\n  const {\n    payload: {\n      body: {\n        choices: [\n          { finish_reason: finishReason, message: responseMessage } = {}\n        ] = [{}]\n      } = {}\n    } = {}\n  } = message;\n\n  return {\n    payload: {\n      message: {\n        ...responseMessage,\n        finishReason,\n      }\n    }\n  };\n}\n"
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+    "id": "00000000-0000-0000-0000-000000000000",
+    "customTableName": "xsipres",
+    "customTableDescription": "Intelligent Interview Prep Results",
+    "customTableSecurityObject": "API_X_IIP_RESULTS",
+    "customTableAPIName": "x-iip-results",
+    "customTableColumns": [
+      {
+        "columnName": "xsipres_student_id",
+        "attributeKeyColumn": "false",
+        "attributeDataType": "varchar2",
+        "attributeDataLength": "36",
+        "attributeDisplay": "true",
+        "attributeRequired": "true",
+        "attributePrompt": "Student persons GUID"
+      },
+      {
+        "columnName": "xsipres_company",
+        "attributeKeyColumn": "false",
+        "attributeDataType": "varchar2",
+        "attributeDataLength": "255",
+        "attributeDisplay": "true",
+        "attributeRequired": "true",
+        "attributePrompt": "Company"
+      },
+      {
+        "columnName": "xsipres_position",
+        "attributeKeyColumn": "false",
+        "attributeDataType": "varchar2",
+        "attributeDataLength": "255",
+        "attributeDisplay": "true",
+        "attributeRequired": "true",
+        "attributePrompt": "Job Title"
+      },
+      {
+        "columnName": "xsipres_rating",
+        "attributeKeyColumn": "false",
+        "attributeDataType": "numeric",
+        "attributeDataLength": "1",
+        "attributeDisplay": "true",
+        "attributeRequired": "true",
+        "attributePrompt": "rating"
+      },
+      {
+        "columnName": "xsipres_date",
+        "attributeKeyColumn": "true",
+        "attributeDataType": "varchar2",
+        "attributeDataLength": "24",
+        "attributeDisplay": "true",
+        "attributeRequired": "true",
+        "attributePrompt": "date ISO-8601"
+      }
+    ],
+    "MEPIndicator": "N",
+    "requiresAutoIncrement": "N"
+  }
