@@ -94,7 +94,8 @@ function JobInfoProviderInternal({ children }) {
             const { message: { content, finishReason } = {} } = interviewTipsData;
             if (finishReason === 'stop') {
                 try {
-                    interviewTips = JSON.parse(content.replace(/```json\n|\n```|\n/g, '')).tips;
+                    const parsedTips = JSON.parse(content.replace(/```json\n|\n```|\n/g, ''));
+                    interviewTips = parsedTips.tips ? parsedTips.tips : parsedTips;
                     if (!Array.isArray(interviewTips)) {
                         interviewTips = [];
                     }
