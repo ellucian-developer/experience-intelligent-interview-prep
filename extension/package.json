@@ -1,6 +1,6 @@
 {
   "name": "intelligent-interview-prep",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Intelligent Interview Prep extension",
   "license": "Apache-2.0",
   "private": true,
@@ -39,7 +39,7 @@
     "react-dom": "^17.0.2",
     "react-intl": "5.12.5",
     "react-markdown": "^8.0.7",
-    "react-router-dom": "5.2.0",
+    "react-router-dom": "5.3.4",
     "string-template": "^1.0.0"
   },
   "devDependencies": {
@@ -58,12 +58,14 @@
     "eslint-plugin-react": "^7.28.0",
     "webpack": "5.76.1",
     "webpack-cli": "4.10.0",
-    "webpack-dev-server": "4.7.4"
+    "webpack-dev-server": "4.15.2"
   },
   "overrides": {
     "remark-mdx": "3.0.0",
     "remark-parse": "11.0.0",
     "remark-stringify": "11.0.0",
-    "unified": "11.0.4"
+    "unified": "11.0.4",
+    "express": "4.21.0",
+    "path-to-regexp": "1.9.0"
   }
 }
