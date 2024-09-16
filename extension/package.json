@@ -1,6 +1,6 @@
 {
   "name": "intelligent-interview-prep",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Intelligent Interview Prep extension",
   "license": "Apache-2.0",
   "private": true,
@@ -61,11 +61,12 @@
     "webpack-dev-server": "4.15.2"
   },
   "overrides": {
+    "axios": "1.7.7",
+    "express": "4.21.0",
+    "path-to-regexp": "1.9.0",
     "remark-mdx": "3.0.0",
     "remark-parse": "11.0.0",
     "remark-stringify": "11.0.0",
-    "unified": "11.0.4",
-    "express": "4.21.0",
-    "path-to-regexp": "1.9.0"
+    "unified": "11.0.4"
   }
 }
