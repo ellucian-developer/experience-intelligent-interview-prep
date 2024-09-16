@@ -13,7 +13,7 @@ This project details a way to use several Ellucian products in concert with Open
 1. Open Oracle/Banner Security Maintenance (GSASECR)
 1. Enter the Banner Integration user in the Principal User ID
 1. Click on Permissions -> Modify
-1. Cick Insert and enter API_CUSTOM_TABLE_CONFIG for the Object Name and BAN_DEFAULT_M for the Role Name
+1. Click Insert and enter API_CUSTOM_TABLE_CONFIG for the Object Name and BAN_DEFAULT_M for the Role Name
 1. Click SAVE
 
 ## 2.2. Create custom table
@@ -21,32 +21,32 @@ Bruno or Postman to POST the new table
 1. Create a Post request to https://integrate.elluciancloud.com/api/custom-table-configurations
 1. Use file banner-extensibility/x-iip-result.json as the body.
 1. Set Accept header to application/json
-1. Add a Bearer token using your preferred method from calling https://integrate.elluciancloud.com/auth to get a token.
+1. Add a Bearer token using your preferred method by calling https://integrate.elluciancloud.com/auth to get a token.
 
-Note: the table name has to start with an X and the second character has to be defined in GTVSYSI_CODE. I used an "S" which is for Student.
+Note: the table name has to start with an X and the second character has to be defined in GTVSYSI_CODE. I used an "S" for student.
 
-## 2.3. Give Integration API user permission to acces the custom table's API
+## 2.3. Give Integration API user permission to access the custom table's API
 1. Open Oracle/Banner Security Maintenance (GSASECR)
 1. Enter the Banner Integration user in the Principal User ID
 1. Click on Permissions -> Modify
-1. Cick Insert and enter API_X_IIP_RESULTS for the Object Name and BAN_DEFAULT_M for the Role Name. Note: the Object name is in the json body sent when creating the custom table
+1. Click Insert and enter API_X_IIP_RESULTS for the Object Name and BAN_DEFAULT_M for the Role Name. Note: The object name is in the JSON body sent when creating the custom table
 1. Click SAVE
 
 ## 2.4. Add Resource to Integration API in Ethos
 1. Open Ethos Integration administration UI
 1. Find the Banner Integration application that is the source for the Integration API
-1. Ether "Auto-configure" or manually add the x-iip-results resource. If you use auto configure, you can verify by searching for resource in the Owned Resources
+1. Ether "Auto-configure" or manually add the x-iip-results resource. If you use auto-configure, you can verify by searching for resources in the Owned Resources
 
 ## 2.5. Verify custom table API
 You should now be able to issue a GET on the x-iip-results resource.
 
 # 3. Create pipelines in Data Connect
 
-1. Open Integration Designer and create a package. Names have to be global, so use something like your .edu name as a prefix. I named mine elive2024-iip.
+1. Open Integration Designer and create a package. The name is global, so use something like your .edu name as a prefix. I named mine elive2024-iip.
 
 ## 3.2. Create a get-student-advisor pipeline.
 
-This first pipeline is used by EIP to fetch the student's advisor. This is to make the assigment to the advisor when the student requests coaching.
+This first pipeline is used by EIP to fetch the student's advisor. This is to make the assignment to the advisor when the student requests coaching.
 
 1. From the package you created, click on the + Pipeline button
 1. Chose Pipeline Type - API
@@ -56,9 +56,9 @@ This first pipeline is used by EIP to fetch the student's advisor. This is to ma
 1. Description - Get the student advisor for EIP Action
 1. Save
 1. Import - Click on the down arrow next to the GET in the header and pick "Import Pipeline"
-1. Pick data-connect/get-student-advisor.json from the directory with this projects files.
+1. Pick data-connect/get-student-advisor.json from the directory with this project's files.
 1. Confirm there are 4 fittings in the Pipeline and two properties in the Output Schema
-1. Save and then Publish. Version doesn't really matter but you might wish to start with version 1.0.0
+1. Save and then Publish. The version doesn't really matter, but you might wish to start with version 1.0.0
 
 ## 3.3. Create a get-program pipeline.
 
@@ -72,12 +72,12 @@ This and subsequent pipelines are invoked from the Extension. Note these will al
 1. Description - GET the current user's matriculated student-academic-program
 1. Save
 1. Import - Click on the down arrow next to the GET in the header and pick "Import Pipeline"
-1. Pick data-connect/get-program.json from the directory with this projects files.
+1. Pick data-connect/get-program.json from the directory with this project's files.
 1. Confirm there are 2 fittings in the Pipeline.
-1. Save and then Publish. Version doesn't really matter but you might wish to start with version 1.0.0
+1. Save and then Publish. The version doesn't really matter, but you might wish to start with version 1.0.0
 
 ## 3.4. Create a get-generate-company-info pipeline.
-Note: this pipelilne will use the OpenAI Key set in Experience Card Configuration. It defaults to using a OpenAI model of "gpt-4-turbo-preview" at the time this was shared. However, the "best" model will change over time.
+Note: this pipeline will use the OpenAI Key set in Experience Card Configuration. It defaults to using an OpenAI model of "gpt-4-turbo-preview" at the time this was shared. However, the "best" model will change over time.
 
 1. From the package you created, click on the + Pipeline button
 1. Chose Pipeline Type - API
@@ -87,12 +87,12 @@ Note: this pipelilne will use the OpenAI Key set in Experience Card Configuratio
 1. Description - generates company information
 1. Save
 1. Import - Click on the down arrow next to the POST in the header and pick "Import Pipeline"
-1. Pick data-connect/get-generate-company-info.json from the directory with this projects files.
+1. Pick data-connect/get-generate-company-info.json from the directory with this project's files.
 1. Confirm there are 3 fittings in the Pipeline.
-1. Save and then Publish. Version doesn't really matter but you might wish to start with version 1.0.0
+1. Save and then Publish. The version doesn't really matter, but you might wish to start with version 1.0.0
 
 ## 3.5. Create a get-generate-interview-tips pipeline.
-Note: this pipelilne will use the OpenAI Key set in Experience Card Configuration. It defaults to using a OpenAI model of "gpt-4-turbo-preview" at the time this was shared. However, the "best" model will change over time.
+Note: this pipeline will use the OpenAI Key set in Experience Card Configuration. It defaults to using an OpenAI model of "gpt-4-turbo-preview" at the time this was shared. However, the "best" model will change over time.
 
 1. From the package you created, click on the + Pipeline button
 1. Chose Pipeline Type - API
@@ -104,10 +104,10 @@ Note: this pipelilne will use the OpenAI Key set in Experience Card Configuratio
 1. Import - Click on the down arrow next to the POST in the header and pick "Import Pipeline"
 1. Pick data-connect/get-generate-interview-tips.json from the directory with this projects files.
 1. Confirm there are 3 fittings in the Pipeline.
-1. Save and then Publish. Version doesn't really matter but you might wish to start with version 1.0.0
+1. Save and then Publish. The version doesn't really matter, but you might wish to start with version 1.0.0
 
 ## 3.6. Create a post-generate-interview-response pipeline.
-Note: this pipelilne will use the OpenAI Key set in Experience Card Configuration. It defaults to using a OpenAI model of "gpt-4-turbo-preview" at the time this was shared. However, the "best" model will change over time.
+Note: this pipeline will use the OpenAI Key set in Experience Card Configuration. It defaults to using an OpenAI model of "gpt-4-turbo-preview" at the time this was shared. However, the "best" model will change over time.
 
 1. From the package you created, click on the + Pipeline button
 1. Chose Pipeline Type - API
@@ -119,10 +119,10 @@ Note: this pipelilne will use the OpenAI Key set in Experience Card Configuratio
 1. Import - Click on the down arrow next to the POST in the header and pick "Import Pipeline"
 1. Pick data-connect/post-generate-interview-response.json from the directory with this projects files.
 1. Confirm there are 3 fittings in the Pipeline.
-1. Save and then Publish. Version doesn't really matter but you might wish to start with version 1.0.0
+1. Save and then Publish. The version doesn't really matter, but you might wish to start with version 1.0.0
 
 ## 3.7. Create a post-iip-results pipeline.
-Note: this pipelilne posts a result from an interview to the custom table created in section 2 above.
+Note: this pipeline posts a result from an interview to the custom table created in section 2 above.
 
 1. From the package you created, click on the + Pipeline button
 1. Chose Pipeline Type - API
@@ -134,7 +134,7 @@ Note: this pipelilne posts a result from an interview to the custom table create
 1. Import - Click on the down arrow next to the POST in the header and pick "Import Pipeline"
 1. Pick data-connect/post-chat.json from the directory with this projects files.
 1. Confirm there are 2 fittings in the Pipeline.
-1. Save and then Publish. Version doesn't really matter but you might wish to start with version 1.0.0
+1. Save and then Publish. The version doesn't really matter, but you might wish to start with version 1.0.0
 
 ## 3.8. Verify and Configure Ethos to allow execution of get-student-advisor pipeline
 1. Login to Ethos Integration administration application.
@@ -145,13 +145,13 @@ Note: this pipelilne posts a result from an interview to the custom table create
 1. Select the application you wish to use when the API call is made from EIP. (same application coming up in step 9)
 1. Press the "ADD" button.
 1. Pick "Applications" from the top nav
-1. Find an open the application you wish to use when the API call is made from EIP. This could be the same Ethos application used by Experience or another one you create for this specific pupose.
+1. Find and open the application you wish to use when the API call is made from EIP. This could be the same Ethos application used by Experience or another one you create for this specific purpose.
 1. Open the tab named "Tags"
-1. Click on "ADD TAG" and enter the name "integration-package" and the value of your package created in section 3.1 above. Note the name has to be modified to remove dashes and camel case words. Mine package is named elive2024-iip, so I enter "elive2024Iip". Note if this tag is already present, add your package to the list in the values, using a comma to seperate multiple packages. See docs for details on the package name changes - https://resources.elluciancloud.com/bundle/ethos_data_connect/page/t_dc_designer_ethos_token_configuration.html
+1. Click on "ADD TAG" and enter the name "integration-package" and the value of your package created in section 3.1 above. Note the name has to be modified to remove dashes and camel case words. Mine package is named elive2024-iip, so I entered "elive2024Iip". Note if this tag is already present, add your package to the list in the values, using a comma to separate multiple packages. See docs for details on the package name changes - https://resources.elluciancloud.com/bundle/ethos_data_connect/page/t_dc_designer_ethos_token_configuration.html
 1. Click Save
 
 ## 3.9. Configure Experience Permissions so that your target users can execute the User Token pipelines
-Note: You should have already verified the three pipelilnes used by the extension are available on the Platform Component. See Section 4 above.
+Note: You should have already verified the three pipelines used by the extension are available on the Platform Component. See Section 4 above.
 1. Login to Experience Setup
 1. Pick "Permissions" from the top nav
 1. Ensure the Environment is correct in the top right.
@@ -178,7 +178,7 @@ Note: You should have already verified the three pipelilnes used by the extensio
 1. Click on "Add Data".
 1. Select the Data Source for your Banner DB and click on the "Next" button
 1. Select your Dataset. Mine is "Intelligent Interview Prep".
-1. Click on "Load now". You can watch it work on the "Recent Activity" tab. When done it should show a status of "Active"
+1. Click on "Load now". You can watch it work on the "Recent Activity" tab. When done, it should show a status of "Active"
 
 ## 4.3 Populate the Custom Table data
 1. Use Insights Administration card to launch "Population"
@@ -190,14 +190,14 @@ Note: You should have already verified the three pipelilnes used by the extensio
 1. Select "Load".
 1. Select "Run now".
 1. Click on "Create Job" button. You can monitor it in the "Activity" tab.
-1. Note this should complete but no data exists yet, unless you manually used the custom table's API to POST data.
+1. Note this should complete, but no data exists yet, unless you manually used the custom table's API to POST data.
 1. Create a refresh job. So that data is refreshed periodically from the lake.
 1. While still in Insights Administration -> Population, select the "+" button.
 1. As before, pick the same Data Source, Job Type, and Job Template as above. Steps 3-5.
 1. Give it an appropriate job name. I used "Refresh IIP"
 1. Select "Refresh"
 1. Select "On a recurring schedule" or "Now (when created), then on a recurring schedule"
-1. You can use either Daily or twice daily. and pick an appropriate time.
+1. You can use either Daily or twice daily. And pick an appropriate time.
 1. Click on "Create Job"
 
 ## 4.4 Create a visulization
@@ -206,19 +206,19 @@ Note: You should have already verified the three pipelilnes used by the extensio
 1. Pick "Data Warehouse"
 1. Pick "ban_extensions"
 1. Pick "Xsipres"
-1. Click on the "Summarize" botton in the top right.
+1. Click on the "Summarize" button at the top right.
 1. Ensure "Summarize by" is set to Count
 1. Pick "Group By" on "Xsipres rating"
 1. Click on the "Done" button in the bottom right
 1. Click on the "Visualization" button in the bottom left
-1. Select "Pie". Then pick the gear for Pie options
+1. Select "Pie". Then, pick the gear for Pie options
 1. We are going to create a Pie chart that shows the percent per interview rating
 1. Ensure the Dimension is set to "Xsipres Rating" and the Measure is set to "Count"
 1. Click on the "Save" button, top right
 1. Give the Report a name. Like "IIP Results"
 1. Put it in your school's collection
 
-## 4.5 Create an Insights card with the visulization
+## 4.5 Create an Insights card with the visualization
 1. From Experience dashboard, pick the menu (top left) to go to "Configuration".
 1. Click the "Add Card" button in the top right
 1. Pick "Insights" for the card template
@@ -239,7 +239,7 @@ Note: You should have already verified the three pipelilnes used by the extensio
 1. run "npm install"
 1. copy the sample.env to .env and add values as needed. Including the upload token from Experience Setup
 1. You might want to uncomment the EXPERIENCE_EXTENSION_ENABLED and EXPERIENCE_EXTENSION_ENABLED lines in .env and set appropriate values
-1. Run one of the npm scripts to upload the extenion, such as "npm run deploy-dev"
+1. Run one of the npm scripts to upload the extension, such as "npm run deploy-dev"
 1. If needed, find the extension in Experience Setup and enable it for the desired Environment. Probably just Test for now. No need for a shared secret
 
 ## 5.2 Configure the extension
@@ -260,7 +260,7 @@ Note: You should have already verified the three pipelilnes used by the extensio
 
 # 6. Setup and Configure Ellucian Intelligent Processes
 
-Note, when creating the external task and the action, if you use the names as defined here, you will be able to import the workflow from the YAML file.
+Note that creating the external task and the action, if you use the names as defined here, you will be able to import the workflow from the YAML file.
 
 ## 6.1 Create an External Task for the extension
 1. Launch Maestro Designer from the App Menu.
@@ -269,7 +269,7 @@ Note, when creating the external task and the action, if you use the names as de
 1. Enter a task name. I used "Intelligent Interview Prep"
 1. Enter a description. I used "Launches Intelligent Interview Prep"
 1. The Code will be generated from the task name. You can change this if you desire to before you save it the first time.
-1. Under External Location enter a Route (note this is the route path expectect in the extension with the task ID). Enter "/${taskId}"
+1. Under External Location enter a Route (note this is the route path expected in the extension with the task ID). Enter "/${taskId}"
 1. Enter the Publisher. This is the publisher you used in the extension's extension.js
 1. Enter the extension name from the extension.js. "intelligent-interview-prep"
 1. Enter the launch card type from the extension.js. "LaunchCard"
@@ -293,7 +293,7 @@ Note: To get the Account ID for step 6.1.11, open a browser tab and go to https:
 1. Enter a name. I used "Get Students Advisor"
 1. Enter a description.
 1. The Code will be generated from the action name. You can change this if you desire to before you save it the first time.
-1. Enter the pipeline name. In my case I used "elive2024-get-student-advisor"
+1. Enter the pipeline name. In my case, I used "elive2024-get-student-advisor"
 1. Enter the API Key you wish this pipeline to use to get the student's advisor. See the pipeline defined in step 3.2
 1. Enter the contents of intelligent-processes/get-student-advisor-action-def.json into the Action Definition JSON block
 1. Click on the "SAVE" button.
@@ -301,7 +301,7 @@ Note: To get the Account ID for step 6.1.11, open a browser tab and go to https:
 1. You will need to grant permission to your user in Maestro to the newly created Action
 1. Go to Experience Setup -> Permissions
 1. Search for maestro-experience-modeler
-1. Pick "All Actions". Then pick the action you created. Mine is "Get Students Advisor"
+1. Pick "All Actions". Then, pick the action you created. Mine is "Get Students Advisor"
 1. Select a role or user that will allow your Experience user to Use the action.
 1. Click Save
 
@@ -361,7 +361,7 @@ My workflow ID is "b6f2d056-306a-4a9b-8719-2b7d1dbee497". Note this value is nee
 1. You will need to grant permission to the student users to Execute this workflow.
 1. Got to Experience Setup -> Permissions
 1. Search for maestro-experience-modeler
-1. Pick "All Workflows". Then pick the workflow you created. Mine is named Request Intelligent Interview Prep
+1. Pick "All Workflows". Then, pick the workflow you created. Mine is named Request Intelligent Interview Prep
 1. Select a role or user that will allow your student users to Execute the workflow. In my case I am using the EEDM Role "student"
 
 # 7. Use Cases
@@ -372,11 +372,11 @@ My workflow ID is "b6f2d056-306a-4a9b-8719-2b7d1dbee497". Note this value is nee
 1. Click on the "Sign up for a mock interview" button. This will show a snackbar message stating the Interview Requested
 1. Refresh the browser to see the assigned task in the Maestro Tasks card or in the production Experience, it will show up as a Notification in the top navigation.
 1. From the notification or the Maestro Tasks card, click on the link to "Intelligent Interview Prep"
-1. Interact with the page and the interview chat. At the end of the interview, you will be asked "Would you like to request coaching from your advisor?". If you pick the yes option, it will initiate a workflow assigned to the student's advisor requesting a coaching sesion.
+1. Interact with the page and the interview chat. At the end of the interview, you will be asked "Would you like to request coaching from your advisor?". If you pick the yes option, it will initiate a workflow assigned to the student's advisor requesting a coaching session.
 
 ## 7.2. Advisor Use Case
-1. Login to Experience as an Intelligent Interview Prep studunt's advisor.
-1. From the notification or the Maestro Tasks card, click on th elink to "Approval Task". This will open the Maestro view of the task assigned to the advisor.
+1. Login to Experience as an Intelligent Interview Prep student's advisor.
+1. From the notification or the Maestro Tasks card, click on the link to "Approval Task". This will open the Maestro view of the task assigned to the advisor.
 1. The advisor can then complete the task after acknowledging the student was or was not coached.
 
 
