@@ -277,7 +277,7 @@ export default function Chat({show}) {
                     icon: 'completion',
                     label: 'Complete Task',
                     callback: () => {
-                        completeTask();
+                        completeTask({ coaching: false });
                     }
                 }],
             })

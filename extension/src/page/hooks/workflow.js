@@ -83,7 +83,7 @@ export function useWorkflow() {
 
     return {
         canCompleteTask: authenticatedEthosFetch && taskId,
-        completeTask: ({ coaching }) => completeTask({ authenticatedEthosFetch, coaching, taskId }),
+        completeTask: ({ coaching } = {}) => completeTask({ authenticatedEthosFetch, coaching, taskId }),
     }
 }
 
